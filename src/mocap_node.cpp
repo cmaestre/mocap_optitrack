@@ -146,17 +146,23 @@ void processMocapData( const char** mocap_model,
 
                     if( format.model.numRigidBodies > 0 )
                     {
+                        //ROS_WARN("**********************************");
                         for( int i = 0; i < format.model.numRigidBodies; i++ )
                         {
                             int ID = format.model.rigidBodies[i].ID;
                             RigidBodyMap::iterator item = published_rigid_bodies.find(ID);
                             item->second.set_free_marker_positions(free_markers_positions);
 
+                            //ROS_INFO_STREAM("Yup Publishing Rigid bodies with id : " << ID);
                             if (item != published_rigid_bodies.end())
                             {
+                                //ROS_INFO_STREAM("Yup Publishing Rigid bodies : " << format.model.numRigidBodies);
                                 item->second.publish(format.model.rigidBodies[i]);
                             }
                         }
+                    }
+                    else{
+                        ROS_WARN_STREAM("No rigid bodies, number is : " << format.model.numRigidBodies);
                     }
                 }
 
@@ -175,6 +181,8 @@ void processMocapData( const char** mocap_model,
                 }
                 // else skip packet
             }
+            //else
+              //  ROS_WARN_STREAM("No bytes, the number is : " << numBytes);
         } while( numBytes > 0 );
 
         // Don't try again immediately

@@ -1,0 +1,2 @@
+int32 ID
+geometry_msgs/PoseStamped object_pose

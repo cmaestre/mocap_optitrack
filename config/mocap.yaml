@@ -3,16 +3,52 @@
 # Identifier corresponds to Trackable ID set in Tracking Tools
 #
 rigid_bodies:
-    '1':
-        pose: optitrack/calibrator/pose
-        position: optitrack/calibrator/position
-        child_frame_id: optitrack/calibrator/base_link
+    '2':
+        pose: optitrack/pan/pose
+        position: optitrack/pan/position
+        child_frame_id: optitrack/pan/base_link
         parent_frame_id: optitrack_frame
         use_new_coordinates: false
-    '2':
-        pose: optitrack/basket/pose
-        position: optitrack/ball/position
-        child_frame_id: optitrack/ball/base_link
+    '3':
+        pose: optitrack/dish/pose
+        position: optitrack/dish/position
+        child_frame_id: optitrack/dish/base_link
+        parent_frame_id: optitrack_frame
+        use_new_coordinates: false
+    '4':
+        pose: optitrack/green_button/pose
+        position: optitrack/green_button/position
+        child_frame_id: optitrack/green_button/base_link
+        parent_frame_id: optitrack_frame
+        use_new_coordinates: false
+    '5':
+        pose: optitrack/hook/pose
+        position: optitrack/hook/position
+        child_frame_id: optitrack/hook/base_link
+        parent_frame_id: optitrack_frame
+        use_new_coordinates: false
+    '6':
+        pose: optitrack/blue_cylinder/pose
+        position: optitrack/blue_cylinder/position
+        child_frame_id: optitrack/blue_cylinder/base_link
+        parent_frame_id: optitrack_frame
+        use_new_coordinates: false
+    '7':
+        pose: optitrack/tea_box/pose
+        position: optitrack/tea_box/position
+        child_frame_id: optitrack/tea_box/base_link
+        parent_frame_id: optitrack_frame
+        use_new_coordinates: false
+    '8':
+        pose: optitrack/zuchinni/pose
+        position: optitrack/zuchinni/position
+        child_frame_id: optitrack/zuchinni/base_link
+        parent_frame_id: optitrack_frame
+        use_new_coordinates: false
+    '9':
+        pose: optitrack/croissant/pose
+        position: optitrack/croissant/position
+        child_frame_id: optitrack/croissant/base_link
         parent_frame_id: optitrack_frame
         use_new_coordinates: false
 optitrack_config:

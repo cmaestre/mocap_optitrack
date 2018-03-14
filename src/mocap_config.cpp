@@ -47,6 +47,8 @@
 #include <geometry_msgs/Pose2D.h>
 #include <tf/transform_datatypes.h>
 #include "mocap_optitrack/mocap_config.h"
+#include "mocap_optitrack/ObjectPoseID.h"
+#include "mocap_optitrack/ObjectPositionID.h"
 
 const std::string POSE_TOPIC_PARAM_NAME = "pose";
 const std::string POINT_TOPIC_PARAM_NAME = "position";
@@ -70,7 +72,8 @@ PublishedRigidBody::PublishedRigidBody(XmlRpc::XmlRpcValue &config_node)
     if (publish_pose)
     {
         pose_topic = (std::string&) config_node[POSE_TOPIC_PARAM_NAME];
-        pose_pub = n.advertise<geometry_msgs::PoseStamped>(pose_topic, 1000);
+        //pose_pub = n.advertise<geometry_msgs::PoseStamped>(pose_topic, 1000);
+        pose_pub = n.advertise<mocap_optitrack::ObjectPoseID>(pose_topic, 1000);
     }
 
     if(publish_point){
@@ -78,7 +81,8 @@ PublishedRigidBody::PublishedRigidBody(XmlRpc::XmlRpcValue &config_node)
 
         point_topic = (std::string&) config_node[POINT_TOPIC_PARAM_NAME];
         stamped_transform_topic = (std::string&) config_node[STAMPED_TRANSFORM_TOPIC_PARAM_NAME];
-        point_pub = n.advertise<geometry_msgs::PointStamped>(point_topic, 1000);
+        //point_pub = n.advertise<geometry_msgs::PointStamped>(point_topic, 1000);
+        point_pub = n.advertise<mocap_optitrack::ObjectPositionID>(point_topic, 1000);
         stamped_transform_pub = n.advertise<geometry_msgs::TransformStamped>(stamped_transform_topic, 1000);
         ROS_WARN_STREAM("The point topic name is: " << point_topic);
         ROS_WARN_STREAM("The other topic name is: " << stamped_transform_topic);
@@ -115,23 +119,31 @@ void PublishedRigidBody::publish(RigidBody &body)
     // TODO Below was const, see if there a way to keep it like that.
     geometry_msgs::PoseStamped pose = body.get_ros_pose(use_new_coordinates);
     geometry_msgs::PointStamped point;
+    mocap_optitrack::ObjectPoseID pose_complete;
+    mocap_optitrack::ObjectPositionID point_complete;
     point.header.stamp = pose.header.stamp;
+
+    pose_complete.ID = body.ID;
+    point_complete.ID = body.ID;
 
     if (publish_pose)
     {
         pose.header.frame_id = parent_frame_id;
-        pose_pub.publish(pose);
+        pose_complete.object_pose = pose;
+        pose_pub.publish(pose_complete);
     }
 
 //    ROS_INFO_STREAM("size of free marker vector is: " << _free_marker_positions.size());
 //    ROS_INFO_STREAM("publish point boolean is: " << publish_point);
 //    ROS_WARN("*******************************");
-    if(publish_point && !_free_marker_positions.empty()){
+    if(publish_point){
         point.header.frame_id = parent_frame_id;
-        point.point.x = _free_marker_positions[0][0];
-        point.point.y = _free_marker_positions[0][1];
-        point.point.z = _free_marker_positions[0][2];
-        point_pub.publish(point);
+        point.point.x = pose.pose.position.x;
+        point.point.y = pose.pose.position.y;
+        point.point.z = pose.pose.position.z;
+
+        point_complete.object_position = point;
+        point_pub.publish(point_complete);
     }
     if (!publish_pose2d && !publish_tf)
     {
